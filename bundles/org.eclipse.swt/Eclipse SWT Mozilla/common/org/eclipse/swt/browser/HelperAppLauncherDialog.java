@@ -205,6 +205,7 @@ int PromptForSaveToFile (long /*int*/ arg0, long /*int*/ arg1, long /*int*/ arg2
 		return XPCOM.NS_ERROR_FAILURE;
 	}
 	nsEmbedString path = new nsEmbedString (name);
+	// TODO: NewLocalFile now returns a nsIFile not a nsILocalFile
 	rc = XPCOM.NS_NewLocalFile (path.getAddress (), 1, result);
 	path.dispose ();
 	if (rc != XPCOM.NS_OK) Mozilla.error (rc);

@@ -36,12 +36,14 @@ public class nsIDOMWindow extends nsISupports {
 	static final String NS_IDOMWINDOW_10_IID_STR = "8f577294-d572-4473-94b1-d2c5a74a2a74";
 	static final String NS_IDOMWINDOW_24_IID_STR = "be62660a-e3f6-409c-a4a9-378364a9526f";
 	static final String NS_IDOMWINDOW_31_IID_STR = "1b4a23a2-2ccf-4690-9da7-f3a7a8308381";
+    static final String NS_IDOMWINDOW_38_IID_STR = "8146f3fc-9fc1-47c5-85ef-95d686e4ca6d";
 
 	static {
 		IIDStore.RegisterIID(nsIDOMWindow.class, MozillaVersion.VERSION_BASE, new nsID(NS_IDOMWINDOW_IID_STR));
 		IIDStore.RegisterIID(nsIDOMWindow.class, MozillaVersion.VERSION_XR10, new nsID(NS_IDOMWINDOW_10_IID_STR));
 		IIDStore.RegisterIID(nsIDOMWindow.class, MozillaVersion.VERSION_XR24, new nsID(NS_IDOMWINDOW_24_IID_STR));
 		IIDStore.RegisterIID(nsIDOMWindow.class, MozillaVersion.VERSION_XR31, new nsID(NS_IDOMWINDOW_31_IID_STR));
+		IIDStore.RegisterIID(nsIDOMWindow.class, MozillaVersion.VERSION_XR38, new nsID(NS_IDOMWINDOW_38_IID_STR));
 	}
 
 	public nsIDOMWindow(long /*int*/ address) {

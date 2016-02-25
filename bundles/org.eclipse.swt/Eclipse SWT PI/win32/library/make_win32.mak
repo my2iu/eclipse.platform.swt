@@ -54,7 +54,7 @@ WGL_OBJS   = wgl.obj wgl_structs.obj wgl_stats.obj
 
 XULRUNNER_PREFIX = swt-xulrunner
 XULRUNNER_LIB = $(XULRUNNER_PREFIX)-$(WS_PREFIX)-$(SWT_VERSION).dll
-XULRUNNER_LIBS = Advapi32.lib $(XULRUNNER_SDK)\lib\xpcomglue.lib
+XULRUNNER_LIBS = Advapi32.lib $(XULRUNNER_SDK)\lib\xpcomglue.lib $(XULRUNNER_SDK)\lib\mozalloc.lib
 XULRUNNER_OBJS = xpcom.obj xpcom_custom.obj xpcom_structs.obj xpcom_stats.obj
 XPCOMINIT_OBJS = xpcominit.obj xpcominit_structs.obj xpcominit_stats.obj
 
@@ -67,8 +67,16 @@ MOZILLACFLAGS = -c \
 	-DMOZILLA_STRICT_API=1 \
 	-W3 \
 	-I. \
-	-I"$(JAVA_HOME)/include" \
-	-I"$(JAVA_HOME)/include/win32" \
+	-DWIN32 \
+	-DNO__1XPCOMGlueShutdown \
+	-DNO__1Call__IIIIII \
+	-DNO_GREVersionRange \
+	-DNO__1GRE_1GetGREPathWithProperties \
+	-DNO_GREProperty \
+	-FImozilla/Char16.h \
+	-I$(JAVA_HOME)/include \
+	-I$(JAVA_HOME)/include/win32 \
+	-I"$(XULRUNNER_SDK)\include\nspr" \
 	-I"$(XULRUNNER_SDK)\include\mozilla-config.h" -I"$(XULRUNNER_SDK)\include"
 
 WEBKITCFLAGS = -c -O1\

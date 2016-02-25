@@ -366,7 +366,7 @@ public static final int NS_InitXPCOM2(long /*int*/ result, long /*int*/ binDirec
 }
 /**
  * @param path cast=(nsAString *),flags=struct
- * @param result cast=(nsILocalFile**)
+ * @param result cast=(nsIFile**)
  */
 public static final native int _NS_NewLocalFile(long /*int*/ path, int followLinks, long /*int*/[] result);
 public static final int NS_NewLocalFile(long /*int*/ path, int followLinks, long /*int*/[] result) {

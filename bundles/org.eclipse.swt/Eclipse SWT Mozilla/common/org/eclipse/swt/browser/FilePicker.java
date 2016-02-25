@@ -215,6 +215,7 @@ int GetFile (long /*int*/ aFile) {
 	if (files != null && files.length > 0) filename += files[0];
 	nsEmbedString path = new nsEmbedString (filename);
 	long /*int*/[] file = new long /*int*/[1];
+	// TODO: NewLocalFile now returns a nsIFile not a nsILocalFile
 	int rc = XPCOM.NS_NewLocalFile (path.getAddress (), 1, file);
 	path.dispose ();
 	if (rc != XPCOM.NS_OK) Mozilla.error (rc);
@@ -238,6 +239,7 @@ int GetDisplayDirectory (long /*int*/ aDisplayDirectory) {
 	String directoryName = directory != null ? directory : "";	//$NON-NLS-1$
 	nsEmbedString path = new nsEmbedString (directoryName);
 	long /*int*/[] file = new long /*int*/[1];
+	// TODO: NewLocalFile now returns a nsIFile not a nsILocalFile
 	int rc = XPCOM.NS_NewLocalFile (path.getAddress (), 1, file);
 	path.dispose ();
 	if (rc != XPCOM.NS_OK) Mozilla.error (rc);

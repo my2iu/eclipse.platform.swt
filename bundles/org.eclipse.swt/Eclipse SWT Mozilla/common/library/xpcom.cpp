@@ -12,6 +12,7 @@
 #include "swt.h"
 #include "xpcom_structs.h"
 #include "xpcom_stats.h"
+#include "mozilla/mozalloc.h"
 
 #ifndef XPCOM_NATIVE
 #define XPCOM_NATIVE(func) Java_org_eclipse_swt_internal_mozilla_XPCOM_##func
@@ -180,7 +181,7 @@ JNIEXPORT jint JNICALL XPCOM_NATIVE(_1NS_1NewLocalFile)
 	jint rc = 0;
 	XPCOM_NATIVE_ENTER(env, that, _1NS_1NewLocalFile_FUNC);
 	if (arg2) if ((lparg2 = env->GetIntLongArrayElements(arg2, NULL)) == NULL) goto fail;
-	rc = (jint)NS_NewLocalFile(*(nsAString *)arg0, arg1, (nsILocalFile**)lparg2);
+	rc = (jint)NS_NewLocalFile(*(nsAString *)arg0, arg1, reinterpret_cast<nsIFile**>(lparg2));
 fail:
 	if (arg2 && lparg2) env->ReleaseIntLongArrayElements(arg2, lparg2, 0);
 	XPCOM_NATIVE_EXIT(env, that, _1NS_1NewLocalFile_FUNC);
@@ -7059,7 +7060,8 @@ JNIEXPORT jintLong JNICALL XPCOM_NATIVE(_1nsIMemory_1Alloc)
 {
 	jintLong rc = 0;
 	XPCOM_NATIVE_ENTER(env, that, _1nsIMemory_1Alloc_FUNC);
-	rc = (jintLong)((nsIMemory *)arg0)->Alloc((size_t)arg1);
+	rc = (jintLong)moz_xmalloc((size_t)arg1);
+	//rc = (jintLong)((nsIMemory *)arg0)->Alloc((size_t)arg1);
 	XPCOM_NATIVE_EXIT(env, that, _1nsIMemory_1Alloc_FUNC);
 	return rc;
 }
@@ -7072,7 +7074,8 @@ JNIEXPORT jintLong JNICALL XPCOM_NATIVE(_1nsIMemory_1Realloc)
 {
 	jintLong rc = 0;
 	XPCOM_NATIVE_ENTER(env, that, _1nsIMemory_1Realloc_FUNC);
-	rc = (jintLong)((nsIMemory *)arg0)->Realloc((void *)arg1, (size_t)arg2);
+	rc = (jintLong)moz_xrealloc((void *)arg1, (size_t)arg2);
+	//rc = (jintLong)((nsIMemory *)arg0)->Realloc((void *)arg1, (size_t)arg2);
 	XPCOM_NATIVE_EXIT(env, that, _1nsIMemory_1Realloc_FUNC);
 	return rc;
 }

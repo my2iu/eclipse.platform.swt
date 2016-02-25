@@ -99,6 +99,7 @@ class Mozilla extends WebBrowser {
 	static final String PREFERENCE_DISABLEOPENWINDOWSTATUSHIDE = "dom.disable_window_open_feature.status"; //$NON-NLS-1$
 	static final String PREFERENCE_DISABLEWINDOWSTATUSCHANGE = "dom.disable_window_status_change"; //$NON-NLS-1$
 	static final String PREFERENCE_JAVASCRIPTENABLED = "javascript.enabled"; //$NON-NLS-1$
+        static final String PREFERENCE_OFFMAINTHREADCOMPOSITIONENABLED = "layers.offmainthreadcomposition.enabled"; //$NON-NLS-1$
 	static final String PREFERENCE_LANGUAGES = "intl.accept_languages"; //$NON-NLS-1$
 	static final String PREFERENCE_PROXYHOST_FTP = "network.proxy.ftp"; //$NON-NLS-1$
 	static final String PREFERENCE_PROXYPORT_FTP = "network.proxy.ftp_port"; //$NON-NLS-1$
@@ -162,7 +163,7 @@ class Mozilla extends WebBrowser {
 					if (result[0] == 0) Mozilla.error (XPCOM.NS_ERROR_NULL_POINTER);
 					pathString.dispose ();
 
-					nsILocalFile localFile = new nsILocalFile (result [0]);
+					nsIFile localFile = new nsIFile (result [0]);
 					result[0] = 0;
 					rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class), result);
 					if (rc != XPCOM.NS_OK) Mozilla.error (rc);
@@ -707,6 +708,22 @@ public void create (Composite parent, int style) {
 			String cacheParentPath = MozillaDelegate.getCacheParentPath ();
 			LocationProvider = new AppFileLocProvider (MozillaPath, profilePath, cacheParentPath, IsXULRunner);
 			LocationProvider.AddRef ();
+                        
+                        /* throw in a preference to disable offthread rendering. I've tried disabling it elsewhere, but I think 
+                         * it gets overwritten by the default preferences in init/all.js, and I'm too lazy to create a preference
+                         * listener to force the preference back to what I want it to be.
+                         */
+                        try {
+                           /* It's unclear how to properly initialize Mozilla's new compositor and its transaction IDs, so we'll disable its use for now */ 
+                                File profileDir = new File(profilePath);
+                                File prefsFile = new File(profileDir, "prefs.js");
+                                FileWriter prefsOut = new FileWriter(prefsFile);
+                                // TODO: Probably a charset problem here
+                                prefsOut.write("user_pref(\"" + PREFERENCE_OFFMAINTHREADCOMPOSITIONENABLED + "\", false);");
+                                prefsOut.close();
+                        } catch (IOException e) {
+                           
+                        }
 
 			/* write swt.xpt to the file system if needed */
 			initExternal (LocationProvider.profilePath);
@@ -801,7 +818,7 @@ public void create (Composite parent, int style) {
 	result[0] = 0;
 
 	/* create the nsIWebBrowser instance */
-	rc = componentManager.CreateInstance (MozillaVersion.CheckVersion(MozillaVersion.VERSION_XR31) ? XPCOM.NS_IWEBBROWSER_31_CID : XPCOM.NS_IWEBBROWSER_CID, 0, IIDStore.GetIID (nsIWebBrowser.class), result);
+        rc = componentManager.CreateInstance ((MozillaVersion.CheckVersion(MozillaVersion.VERSION_XR38) || MozillaVersion.CheckVersion(MozillaVersion.VERSION_XR31)) ? XPCOM.NS_IWEBBROWSER_31_CID : XPCOM.NS_IWEBBROWSER_CID, 0, IIDStore.GetIID (nsIWebBrowser.class), result);
 	if (rc != XPCOM.NS_OK) {
 		browser.dispose ();
 		error (rc);
@@ -2309,21 +2326,26 @@ void initXPCOM (String mozillaPath, boolean isXULRunner) {
 		rc = XPCOM.XPCOMGlueLoadXULFunctions (ptr);
 		if (rc == XPCOM.NS_OK) { /* > 3.x */
 			result[0] = 0;
-			rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class, MozillaVersion.VERSION_XR31, true), result);
-			if (rc == XPCOM.NS_OK) { /* 31.x */
-				MozillaVersion.SetCurrentVersion (MozillaVersion.VERSION_XR31);
+			rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class, MozillaVersion.VERSION_XR38, true), result);
+			if (rc == XPCOM.NS_OK) { /* 38.x */
+				MozillaVersion.SetCurrentVersion (MozillaVersion.VERSION_XR38);
 			} else {
-				rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class, MozillaVersion.VERSION_XR24, true), result);
-				if (rc == XPCOM.NS_OK) { /* 24.x */
-					MozillaVersion.SetCurrentVersion (MozillaVersion.VERSION_XR24);
-				} else { /* 10.x */
-					rc = localFile.QueryInterface (IIDStore.GetIID (nsILocalFile.class, MozillaVersion.VERSION_XR10), result);
-					if (rc != XPCOM.NS_OK) {
-						/* appears to be an unsupported version */
-						browser.dispose ();
-						error (rc);
+				rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class, MozillaVersion.VERSION_XR31, true), result);
+				if (rc == XPCOM.NS_OK) { /* 31.x */
+					MozillaVersion.SetCurrentVersion (MozillaVersion.VERSION_XR31);
+				} else {
+					rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class, MozillaVersion.VERSION_XR24, true), result);
+					if (rc == XPCOM.NS_OK) { /* 24.x */
+						MozillaVersion.SetCurrentVersion (MozillaVersion.VERSION_XR24);
+					} else { /* 10.x */
+						rc = localFile.QueryInterface (IIDStore.GetIID (nsILocalFile.class, MozillaVersion.VERSION_XR10), result);
+						if (rc != XPCOM.NS_OK) {
+							/* appears to be an unsupported version */
+							browser.dispose ();
+							error (rc);
+						}
+						MozillaVersion.SetCurrentVersion (MozillaVersion.VERSION_XR10);
 					}
-					MozillaVersion.SetCurrentVersion (MozillaVersion.VERSION_XR10);
 				}
 			}
 			if (result[0] != 0) new nsISupports (result[0]).Release();
@@ -2756,24 +2778,26 @@ void initProfile (nsIServiceManager serviceManager, boolean isXULRunner) {
 		error (XPCOM.NS_NOINTERFACE);
 	}
 
-	nsIObserverService observerService = new nsIObserverService (result[0]);
-	result[0] = 0;
-	buffer = MozillaDelegate.wcsToMbcs (null, PROFILE_DO_CHANGE, true);
-	int length = STARTUP.length ();
-	char[] chars = new char [length + 1];
-	STARTUP.getChars (0, length, chars, 0);
-	rc = observerService.NotifyObservers (0, buffer, chars);
-	if (rc != XPCOM.NS_OK) {
-		browser.dispose ();
-		error (rc);
-	}
-	buffer = MozillaDelegate.wcsToMbcs (null, PROFILE_AFTER_CHANGE, true);
-	rc = observerService.NotifyObservers (0, buffer, chars);
-	if (rc != XPCOM.NS_OK) {
-		browser.dispose ();
-		error (rc);
-	}
-	observerService.Release ();
+	// TODO: This observerService seems to cause assertion failures in the debug version of Firefox 38
+	// TODO: It looks like XRE_NotifyProfile calls nsXREDirProvider::DoStartup() which calls these methods for us
+//	nsIObserverService observerService = new nsIObserverService (result[0]);
+//	result[0] = 0;
+//	buffer = MozillaDelegate.wcsToMbcs (null, PROFILE_DO_CHANGE, true);
+//	int length = STARTUP.length ();
+//	char[] chars = new char [length + 1];
+//	STARTUP.getChars (0, length, chars, 0);
+//	rc = observerService.NotifyObservers (0, buffer, chars);
+//	if (rc != XPCOM.NS_OK) {
+//		browser.dispose ();
+//		error (rc);
+//	}
+//	buffer = MozillaDelegate.wcsToMbcs (null, PROFILE_AFTER_CHANGE, true);
+//	rc = observerService.NotifyObservers (0, buffer, chars);
+//	if (rc != XPCOM.NS_OK) {
+//		browser.dispose ();
+//		error (rc);
+//	}
+//	observerService.Release ();
 
 	if (isXULRunner) {
 		int size = XPCOM.nsDynamicFunctionLoad_sizeof ();

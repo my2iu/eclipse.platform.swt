@@ -41,11 +41,13 @@ public class nsIFile extends nsISupports {
 	static final String NS_IFILE_IID_STR = "c8c0a080-0868-11d3-915f-d9d889d48e3c";
 	static final String NS_IFILE_24_IID_STR = "272a5020-64f5-485c-a8c4-44b2882ae0a2";
 	static final String NS_IFILE_31_IID_STR = "a99a6a06-f90d-4659-8fce-c2f87feb1167";
+    static final String NS_IFILE_38_IID_STR = "dfb5a307-7ecf-41dd-aee2-f1d623459c44";
 
 	static {
 		IIDStore.RegisterIID(nsIFile.class, MozillaVersion.VERSION_BASE, new nsID(NS_IFILE_IID_STR));
 		IIDStore.RegisterIID(nsIFile.class, MozillaVersion.VERSION_XR24, new nsID(NS_IFILE_24_IID_STR));
 		IIDStore.RegisterIID(nsIFile.class, MozillaVersion.VERSION_XR31, new nsID(NS_IFILE_31_IID_STR));
+		IIDStore.RegisterIID(nsIFile.class, MozillaVersion.VERSION_XR38, new nsID(NS_IFILE_38_IID_STR));
 	}
 
 	public nsIFile(long /*int*/ address) {

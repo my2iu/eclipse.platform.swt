@@ -56,8 +56,8 @@ AppFileLocProvider (String mozillaPath, String profilePath, String cacheParentPa
 		if (result[0] == 0) Mozilla.error (XPCOM.NS_ERROR_NULL_POINTER);
 		pathString.dispose ();
 
-		nsILocalFile file = new nsILocalFile (result [0]);
-		rc = file.Create (nsILocalFile.DIRECTORY_TYPE, 0700);
+		nsIFile file = new nsIFile (result [0]);
+		rc = file.Create (nsIFile.DIRECTORY_TYPE, 0700);
 		if (rc != XPCOM.NS_OK) Mozilla.error (rc);
 		file.Release ();
 	}
@@ -232,7 +232,7 @@ int getFiles (long /*int*/ prop, long /*int*/ _retval) {
 				if (rc != XPCOM.NS_OK) Mozilla.error (rc);
 				if (result[0] == 0) Mozilla.error (XPCOM.NS_ERROR_NULL_POINTER);
 
-				nsILocalFile localFile = new nsILocalFile (result[0]);
+				nsIFile localFile = new nsIFile (result[0]);
 				result[0] = 0;
 				rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class), result);
 				if (rc != XPCOM.NS_OK) Mozilla.error (rc);
@@ -339,7 +339,7 @@ int getFile(long /*int*/ prop, long /*int*/ persistent, long /*int*/ _retval) {
 		if (result[0] == 0) Mozilla.error (XPCOM.NS_ERROR_NULL_POINTER);
 		pathString.dispose ();
 
-		nsILocalFile localFile = new nsILocalFile (result [0]);
+		nsIFile localFile = new nsIFile (result [0]);
 		result[0] = 0;
 	    rc = localFile.QueryInterface (IIDStore.GetIID (nsIFile.class), result);
 		if (rc != XPCOM.NS_OK) Mozilla.error (rc);

@@ -40,6 +40,7 @@ public class nsIDocShell extends nsISupports {
 	static final String NS_IDOCSHELL_10_IID_STR = "0666adf8-8738-4ca7-a917-0348f47d2f40";
 	static final String NS_IDOCSHELL_24_IID_STR = "f453d2ee-bac7-46f9-a553-df918f0cc0d0";
 	static final String NS_IDOCSHELL_31_IID_STR = "e46d924d-c20f-4add-8cf5-1e1c817b2181";
+    static final String NS_IDOCSHELL_38_IID_STR = "f84b1ae4-2f78-4bad-b36a-6a8516ee6e40";
 
 	static {
 		IIDStore.RegisterIID(nsIDocShell.class, MozillaVersion.VERSION_BASE, new nsID(NS_IDOCSHELL_IID_STR));
@@ -50,6 +51,7 @@ public class nsIDocShell extends nsISupports {
 		IIDStore.RegisterIID(nsIDocShell.class, MozillaVersion.VERSION_XR10, new nsID(NS_IDOCSHELL_10_IID_STR));
 		IIDStore.RegisterIID(nsIDocShell.class, MozillaVersion.VERSION_XR24, new nsID(NS_IDOCSHELL_24_IID_STR));
 		IIDStore.RegisterIID(nsIDocShell.class, MozillaVersion.VERSION_XR31, new nsID(NS_IDOCSHELL_31_IID_STR));
+		IIDStore.RegisterIID(nsIDocShell.class, MozillaVersion.VERSION_XR38, new nsID(NS_IDOCSHELL_38_IID_STR));
 	}
 
 	public nsIDocShell(long /*int*/ address) {

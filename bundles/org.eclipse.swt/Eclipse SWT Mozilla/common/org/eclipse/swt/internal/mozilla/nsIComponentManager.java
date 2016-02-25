@@ -35,11 +35,13 @@ public class nsIComponentManager extends nsISupports {
 	static final String NS_ICOMPONENTMANAGER_IID_STR = "a88e5a60-205a-4bb1-94e1-2628daf51eae";
 	static final String NS_ICOMPONENTMANAGER_24_IID_STR = "1d940426-5fe5-42c3-84ae-a300f2d9ebd5";
 	static final String NS_ICOMPONENTMANAGER_31_IID_STR = "d604ffc3-1ba3-4f6c-b65f-1ed4199364c3";
+    static final String NS_ICOMPONENTMANAGER_38_IID_STR = "d604ffc3-1ba3-4f6c-b65f-1ed4199364c3";
 
 	static {
 		IIDStore.RegisterIID(nsIComponentManager.class, MozillaVersion.VERSION_BASE, new nsID(NS_ICOMPONENTMANAGER_IID_STR));
 		IIDStore.RegisterIID(nsIComponentManager.class, MozillaVersion.VERSION_XR24, new nsID(NS_ICOMPONENTMANAGER_24_IID_STR));
 		IIDStore.RegisterIID(nsIComponentManager.class, MozillaVersion.VERSION_XR31, new nsID(NS_ICOMPONENTMANAGER_31_IID_STR));
+		IIDStore.RegisterIID(nsIComponentManager.class, MozillaVersion.VERSION_XR38, new nsID(NS_ICOMPONENTMANAGER_38_IID_STR));
 	}
 
 	public nsIComponentManager(long /*int*/ address) {

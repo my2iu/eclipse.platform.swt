@@ -21,8 +21,9 @@ public class MozillaVersion {
 	public static final int VERSION_XR10 = 5;
 	public static final int VERSION_XR24 = 6;
 	public static final int VERSION_XR31 = 7;
+    public static final int VERSION_XR38 = 8;
 
-	static final int VERSION_LATEST = VERSION_XR31;
+    static final int VERSION_LATEST = VERSION_XR38;
 	static int CurrentVersion = -1;
 
 	public static boolean CheckVersion (int version) {

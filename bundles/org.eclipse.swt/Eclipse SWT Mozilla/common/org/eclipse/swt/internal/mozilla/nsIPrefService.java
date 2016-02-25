@@ -33,10 +33,12 @@ public class nsIPrefService extends nsISupports {
 	static final int LAST_METHOD_ID = nsISupports.LAST_METHOD_ID + 6;
 
 	static final String NS_IPREFSERVICE_IID_STR = "decb9cc7-c08f-4ea5-be91-a8fc637ce2d2";
+    static final String NS_IPREFSERVICE_38_IID_STR = "1f84fd56-3956-40df-b86a-1ea01402ee96";
 
-	static {
-		IIDStore.RegisterIID(nsIPrefService.class, MozillaVersion.VERSION_BASE, new nsID(NS_IPREFSERVICE_IID_STR));
-	}
+    static {
+    	IIDStore.RegisterIID(nsIPrefService.class, MozillaVersion.VERSION_BASE, new nsID(NS_IPREFSERVICE_IID_STR));
+    	IIDStore.RegisterIID(nsIPrefService.class, MozillaVersion.VERSION_XR38, new nsID(NS_IPREFSERVICE_38_IID_STR));
+    }
 
 	public nsIPrefService(long /*int*/ address) {
 		super(address);

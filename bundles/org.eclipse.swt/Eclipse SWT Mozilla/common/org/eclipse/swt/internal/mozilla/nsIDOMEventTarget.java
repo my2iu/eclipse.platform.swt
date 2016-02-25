@@ -36,12 +36,14 @@ public class nsIDOMEventTarget extends nsISupports {
 	static final String NS_IDOMEVENTTARGET_10_IID_STR = "1797d5a4-b12a-428d-9eef-a0e13839728c";
 	static final String NS_IDOMEVENTTARGET_24_IID_STR = "31e92e56-4d23-4a4a-9cfe-a6d12cf434bc";
 	static final String NS_IDOMEVENTTARGET_31_IID_STR = "b128448c-7b53-4769-92cb-cd6eafee676c";
+    static final String NS_IDOMEVENTTARGET_38_IID_STR = "9a78ac3c-9507-4d00-b2d6-10b508d2ec31";
 
 	static {
 		IIDStore.RegisterIID(nsIDOMEventTarget.class, MozillaVersion.VERSION_BASE, new nsID(NS_IDOMEVENTTARGET_IID_STR));
 		IIDStore.RegisterIID(nsIDOMEventTarget.class, MozillaVersion.VERSION_XR10, new nsID(NS_IDOMEVENTTARGET_10_IID_STR));
 		IIDStore.RegisterIID(nsIDOMEventTarget.class, MozillaVersion.VERSION_XR24, new nsID(NS_IDOMEVENTTARGET_24_IID_STR));
 		IIDStore.RegisterIID(nsIDOMEventTarget.class, MozillaVersion.VERSION_XR31, new nsID(NS_IDOMEVENTTARGET_31_IID_STR));
+		IIDStore.RegisterIID(nsIDOMEventTarget.class, MozillaVersion.VERSION_XR38, new nsID(NS_IDOMEVENTTARGET_38_IID_STR));
 	}
 
 	public nsIDOMEventTarget(long /*int*/ address) {
